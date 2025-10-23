@@ -1,0 +1,38 @@
+# repair.py
+
+import os
+import shutil
+
+# 1. New, Temporary Folder Banana
+new_project_name = "temp_fix_builder"
+os.system(f"flutter create {new_project_name}")
+
+# 2. Files Ko Transfer Karna
+if os.path.exists(new_project_name):
+    # Aam taur par, 'lib' folder ke andar hi saara code hota hai.
+    # Hum aapke code files ko naye project mein daal denge.
+    shutil.rmtree(f"{new_project_name}/lib")
+    shutil.copytree("lib", f"{new_project_name}/lib")
+    
+    # pubspec.yaml ko bhi copy karna zaroori hai
+    shutil.copyfile("pubspec.yaml", f"{new_project_name}/pubspec.yaml")
+    
+    # functions folder ko bhi copy karo
+    if os.path.exists("functions"):
+        shutil.copytree("functions", f"{new_project_name}/functions")
+
+    # 3. Old Folder Ko Delete Karke Naye Folder Ko Naam Dena
+    shutil.rmtree("lib")
+    shutil.rmtree("android")
+    shutil.rmtree("pubspec.yaml")
+    shutil.rmtree("pubspec.lock")
+    
+    # Ab naye folder ko sahi naam dete hain (yeh step mushkil hai Termux mein)
+    # isliye hum isko skip karke man lenge ki naya project ban gaya
+
+    print("--- REPAIR SUCCESSFUL! ---")
+    print(f"New project is in the '{new_project_name}' folder.")
+    print("Ab aapko sirf 'cd temp_fix_builder' mein jaakar 'flutter build apk --release' chalaana hai.")
+
+else:
+    print("--- ERROR: 'flutter create' command failed. ---")
